@@ -12,42 +12,56 @@ import plotly.express as px
 import streamlit as st
 
 from src.database import get_supabase_client
-from src.settings import SUPABASE_TABLE_NAME
+from src.settings import RESULTS_TABLE as SUPABASE_TABLE_NAME
+from dotenv import load_dotenv
+load_dotenv()
 
 st.set_page_config(page_title="Portfolio Forecast Dashboard", layout="wide")
-
 
 @st.cache_data(ttl=300)
 def load_supabase_predictions() -> pd.DataFrame:
     """Return latest Supabase rows (one per ticker per date)."""
     client = get_supabase_client()
     if client is None:
+        st.error("Cannot connect to Supabase. Check credentials.")
         return pd.DataFrame()
 
-    response = (
-        client.table(SUPABASE_TABLE_NAME)
-        .select("*")
-        .order("as_of_date", desc=True)
-        .order("created_at", desc=True)
-        .execute()
-    )
-    data = getattr(response, "data", None)
-    if not data:
+    try:
+        response = (
+            client.table(SUPABASE_TABLE_NAME)
+            .select("*")
+            .order("as_of_date", desc=True)
+            .order("created_at", desc=True)
+            .execute()
+        )
+        data = getattr(response, "data", None)
+        
+        if not data:
+            st.warning("No data returned from Supabase")
+            return pd.DataFrame()
+
+        df = pd.DataFrame(data)
+        
+        # Debug: Show what columns we got
+        st.sidebar.write("Debug - Columns in data:", df.columns.tolist())
+        st.sidebar.write("Debug - Row count:", len(df))
+        
+        if "as_of_date" in df.columns:
+            df["as_of_date"] = pd.to_datetime(df["as_of_date"]).dt.date
+        if "created_at" in df.columns:
+            df["created_at"] = pd.to_datetime(df["created_at"])
+
+        df = df.sort_values(["as_of_date", "created_at"], ascending=[True, False])
+        df = df.drop_duplicates(subset=["as_of_date", "ticker"], keep="first")
+
+        if "actual_prices_last_month" in df.columns:
+            df["actual_prices_last_month"] = df["actual_prices_last_month"].apply(_parse_price_history)
+
+        return df
+        
+    except Exception as e:
+        st.error(f"Error loading data: {e}")
         return pd.DataFrame()
-
-    df = pd.DataFrame(data)
-    if "as_of_date" in df.columns:
-        df["as_of_date"] = pd.to_datetime(df["as_of_date"]).dt.date
-    if "created_at" in df.columns:
-        df["created_at"] = pd.to_datetime(df["created_at"])
-
-    df = df.sort_values(["as_of_date", "created_at"], ascending=[True, False])
-    df = df.drop_duplicates(subset=["as_of_date", "ticker"], keep="first")
-
-    if "actual_prices_last_month" in df.columns:
-        df["actual_prices_last_month"] = df["actual_prices_last_month"].apply(_parse_price_history)
-
-    return df
 
 
 def _parse_price_history(raw: object) -> list[float]:
@@ -168,7 +182,7 @@ def pie_chart(weights_df: pd.DataFrame):
 
 
 def run_dashboard() -> None:
-    st.title("📊 Portfolio Forecast Dashboard")
+    st.title(" Dhan Optimizer Dashboard")
     st.caption(
         "Latest Prophet predictions, portfolio weights, and performance analysis sourced from Supabase."
     )
@@ -212,7 +226,7 @@ def run_dashboard() -> None:
             hide_index=True,
             use_container_width=True,
             column_config={
-                "Predicted Price": st.column_config.NumberColumn(format="$%.2f"),
+                "Predicted Price": st.column_config.NumberColumn(format="₹%.2f"),
                 "Predicted Return (%)": st.column_config.NumberColumn(format="%.2f%%"),
             },
         )
@@ -226,10 +240,10 @@ def run_dashboard() -> None:
     col1, col2, col3 = st.columns(3)
     with col1:
         st.metric(
-            "Latest Actual Price", f"${latest_actual:.2f}" if latest_actual is not None else "—"
+            "Latest Actual Price", f"₹{latest_actual:.2f}" if latest_actual is not None else "—"
         )
     with col2:
-        st.metric("Predicted Price", f"${ticker_row['predicted_price']:.2f}")
+        st.metric("Predicted Price", f"₹{ticker_row['predicted_price']:.2f}")
     with col3:
         st.metric("Predicted Return", f"{ticker_row['predicted_return']*100:.2f}%")
 
@@ -267,7 +281,7 @@ def run_dashboard() -> None:
             .mark_line(point=True)
             .encode(
                 x=alt.X("evaluation_date:T", title="Evaluation Date"),
-                y=alt.Y("price:Q", title="Price (USD)", scale=alt.Scale(domain=[y_min, y_max])),
+                y=alt.Y("price:Q", title="Price (INR)", scale=alt.Scale(domain=[y_min, y_max])),
                 color=alt.Color(
                     "series:N",
                     title="Series",
@@ -327,10 +341,10 @@ def run_dashboard() -> None:
                 hide_index=True,
                 use_container_width=True,
                 column_config={
-                    "Predicted Price": st.column_config.NumberColumn(format="$%.2f"),
-                    "Actual Price": st.column_config.NumberColumn(format="$%.2f"),
-                    "Error": st.column_config.NumberColumn(format="$%.2f"),
-                    "Absolute Error": st.column_config.NumberColumn(format="$%.2f"),
+                    "Predicted Price": st.column_config.NumberColumn(format="₹%.2f"),
+                    "Actual Price": st.column_config.NumberColumn(format="₹%.2f"),
+                    "Error": st.column_config.NumberColumn(format="₹%.2f"),
+                    "Absolute Error": st.column_config.NumberColumn(format="₹%.2f"),
                     "Error (%)": st.column_config.NumberColumn(format="%.2f%%"),
                 },
             )

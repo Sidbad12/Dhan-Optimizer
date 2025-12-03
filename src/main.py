@@ -8,6 +8,9 @@ from typing import Any
 
 import pandas as pd
 
+from dotenv import load_dotenv
+load_dotenv()
+
 from src.database import save_results_to_supabase
 from src.extractor import extract_data
 from src.model import ProphetModel
@@ -80,7 +83,7 @@ def run_optimisation(
 
     logger.info("\nPredicted Prices (Next Day):")
     for ticker, price in predictions.items():
-        logger.info(f"  {ticker}: ${price:.2f}")
+        logger.info(f"  {ticker}:  ₹{price:.2f}")
 
     logger.info("\nPredicted Returns:")
     for ticker, ret in predicted_returns.items():

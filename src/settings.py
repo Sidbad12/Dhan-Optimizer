@@ -143,6 +143,16 @@ LOG_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 
 # ==================== VALIDATION ====================
 
+# Add to the end of src/settings.py, before validate_settings()
+
+# ==================== ADDITIONAL CONSTANTS ====================
+
+# Supabase table name
+SUPABASE_TABLE_NAME = RESULTS_TABLE  # Alias for compatibility
+
+# Holiday name mapping (for compatibility with tests)
+HOLIDAY_NAME_MAP = {}  # Not needed for Indian holidays, but keep for compatibility
+
 def validate_settings():
     """Validate configuration settings"""
     errors = []
