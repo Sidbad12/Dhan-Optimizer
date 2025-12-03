@@ -2,9 +2,9 @@ name: Daily Portfolio Optimisation
 
 on:
   schedule:
-    # Run daily at 9:00 AM UTC (adjust timezone as needed)
-    - cron: '0 9 * * *'
-  workflow_dispatch:  # Allows manual triggering from GitHub UI
+    # Run at 10:30 UTC = 4:00 PM IST (after Indian market close at 3:30 PM)
+    - cron: '30 10 * * 1-5'  # Monday to Friday only
+  workflow_dispatch:  # Allows manual triggering
 
 jobs:
   optimise:
