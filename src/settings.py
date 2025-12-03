@@ -72,41 +72,39 @@ PROPHET_PARAMS = {
 INDIAN_MARKET_HOLIDAYS = pd.DataFrame({
     'holiday': 'indian_market_holiday',
     'ds': pd.to_datetime([
-        # 2024 Holidays
-        '2024-01-26',  # Republic Day
-        '2024-03-08',  # Maha Shivaratri
-        '2024-03-25',  # Holi
-        '2024-03-29',  # Good Friday
-        '2024-04-11',  # Id-Ul-Fitr
-        '2024-04-17',  # Ram Navami
-        '2024-04-21',  # Mahavir Jayanti
-        '2024-05-01',  # Maharashtra Day
-        '2024-05-23',  # Buddha Purnima
-        '2024-06-17',  # Bakri Id
-        '2024-07-17',  # Muharram
-        '2024-08-15',  # Independence Day
-        '2024-08-26',  # Janmashtami
-        '2024-10-02',  # Gandhi Jayanti
-        '2024-10-12',  # Dussehra
-        '2024-11-01',  # Diwali (Laxmi Puja)
-        '2024-11-02',  # Diwali Balipratipada
-        '2024-11-15',  # Gurunanak Jayanti
-        '2024-12-25',  # Christmas
-        
-        # 2025 Holidays (add as announced by NSE)
+       
         '2025-01-26',  # Republic Day
-        '2025-03-14',  # Holi
-        '2025-03-31',  # Id-Ul-Fitr
-        '2025-04-10',  # Mahavir Jayanti
-        '2025-04-14',  # Dr. Ambedkar Jayanti
-        '2025-04-18',  # Good Friday
+        '2025-03-08',  # Maha Shivaratri
+        '2025-03-25',  # Holi
+        '2025-03-29',  # Good Friday
+        '2025-04-11',  # Id-Ul-Fitr
+        '2025-04-17',  # Ram Navami
+        '2025-04-21',  # Mahavir Jayanti
         '2025-05-01',  # Maharashtra Day
+        '2025-05-23',  # Buddha Purnima
+        '2025-06-17',  # Bakri Id
+        '2025-07-17',  # Muharram
         '2025-08-15',  # Independence Day
+        '2025-08-26',  # Janmashtami
         '2025-10-02',  # Gandhi Jayanti
-        '2025-10-21',  # Dussehra
+        '2025-10-12',  # Dussehra
         '2025-11-01',  # Diwali (Laxmi Puja)
-        '2025-11-05',  # Gurunanak Jayanti
+        '2025-11-02',  # Diwali Balipratipada
+        '2025-11-15',  # Gurunanak Jayanti
         '2025-12-25',  # Christmas
+        
+        
+        '2026-01-26',  # Republic Day
+        '2026-03-14',  # Holi
+        '2026-03-31',  # Id-Ul-Fitr
+        '2026-04-10',  # Mahavir Jayanti
+        '2026-04-14',  # Dr. Ambedkar Jayanti
+        '2026-04-18',  # Good Friday
+        '2026-05-01',  # Maharashtra Day
+        '2026-08-15',  # Independence Day
+        '2026-10-02',  # Gandhi Jayanti
+        '2026-11-05',  # Gurunanak Jayanti
+        '2026-12-25',  # Christmas
     ]),
     'lower_window': 0,
     'upper_window': 0,

@@ -12,6 +12,7 @@ from typing import Any
 from supabase import Client, create_client
 
 from src.settings import SUPABASE_TABLE_NAME
+from src.settings import CURRENCY_SYMBOL
 
 logger = logging.getLogger(__name__)
 
