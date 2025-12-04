@@ -1,7 +1,7 @@
 # Dhan Optimizer - AI-Powered Indian Stock Portfolio Manager
 
 [![Live Dashboard](https://img.shields.io/badge/Live%20Dashboard-Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://dhan-optimizer-z2x2wydkaappmrr7eampdnr.streamlit.app)
-[![Daily Updates](https://img.shields.io/badge/Updates-Automated-00C853?style=for-the-badge&logo=github-actions&logoColor=white)](https://github.com/YOUR_USERNAME/Dhan-Optimizer/actions)
+[![Daily Updates](https://img.shields.io/badge/Updates-Automated-00C853?style=for-the-badge&logo=github-actions&logoColor=white)](https://github.com/Sidbad12/Dhan-Optimizer/actions)
 [![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 
 > **Fully automated ML pipeline** that forecasts Indian stock prices (NSE) using Facebook Prophet and optimizes portfolio allocation using Modern Portfolio Theory. Runs daily with predictions automatically updated at 4 PM IST.
@@ -586,8 +586,8 @@ This project is forked from **[egorhowell/Prophet-Forecasting-For-Portfolio-Opti
 ##  Contact & Support
 
 - **Live Dashboard**: [dhan-optimizer.streamlit.app](https://dhan-optimizer-z2x2wydkaappmrr7eampdnr.streamlit.app)
-- **GitHub Issues**: [Report bugs](https://github.com/YOUR_USERNAME/Dhan-Optimizer/issues)
-- **GitHub Repo**: [Source code](https://github.com/YOUR_USERNAME/Dhan-Optimizer)
+- **GitHub Issues**: [Report bugs](https://github.com/Sidbad12/Dhan-Optimizer/issues)
+- **GitHub Repo**: [Source code](https://github.com/Sidbad12/Dhan-Optimizer)
 
 ---
 
@@ -606,7 +606,7 @@ This project is for educational purposes. Please refer to:
 
 **Made with ❤️ for Indian investors and ML enthusiasts 🇮🇳**
 
-[![GitHub stars](https://img.shields.io/github/stars/YOUR_USERNAME/Dhan-Optimizer?style=social)](https://github.com/YOUR_USERNAME/Dhan-Optimizer/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/YOUR_USERNAME/Dhan-Optimizer?style=social)](https://github.com/YOUR_USERNAME/Dhan-Optimizer/network/members)
+[![GitHub stars](https://img.shields.io/github/stars/Sidbad12/Dhan-Optimizer?style=social)](https://github.com/Sidbad12/Dhan-Optimizer/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/Sidbad12/Dhan-Optimizer?style=social)](https://github.com/Sidbad12/Dhan-Optimizer/network/members)
 
 </div>
