@@ -1,0 +1,56 @@
+name: Keep Supabase Alive
+
+on:
+  schedule:
+    # Run every 6 days at 2:00 AM UTC to prevent 7-day pause
+    - cron: '0 2 */6 * *'
+  workflow_dispatch:  # Manual trigger
+
+jobs:
+  ping-supabase:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install minimal dependencies
+        run: |
+          pip install supabase python-dotenv
+
+      - name: Ping Supabase to keep it alive
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: |
+          python - <<EOF
+          import os
+          from supabase import create_client
+          from datetime import datetime
+          
+          # Create client
+          supabase = create_client(
+              os.environ["SUPABASE_URL"],
+              os.environ["SUPABASE_KEY"]
+          )
+          
+          # Simple query to keep database active
+          try:
+              result = supabase.table("portfolio_predictions").select("id").limit(1).execute()
+              print(f"✅ Supabase pinged successfully at {datetime.now()}")
+              print(f"   Database is active and responding")
+          except Exception as e:
+              print(f"❌ Failed to ping Supabase: {e}")
+              exit(1)
+          EOF
+
+      - name: Wake up Streamlit app
+        run: |
+          echo "Waking up Streamlit app..."
+          curl -I https://dhan-optimizer-z2x2wydkaappmrr7eampdnr.streamlit.app || true
+          echo "✅ Streamlit app pinged"

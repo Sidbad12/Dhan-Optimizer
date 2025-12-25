@@ -4,10 +4,6 @@ Configuration settings for Indian Stock Portfolio Optimization
 from datetime import datetime, timedelta
 import pandas as pd
 
-# ==================== PORTFOLIO CONFIGURATION ====================
-
-# Indian Stock Tickers (NSE)
-# Top liquid stocks from different sectors for diversification
 PORTFOLIO_TICKERS = [
     "RELIANCE.NS",      # Energy & Petrochemicals
     "TCS.NS",           # IT Services
@@ -21,13 +17,6 @@ PORTFOLIO_TICKERS = [
     "LT.NS",            # Infrastructure
 ]
 
-# Alternative: Nifty 50 Top 10
-# PORTFOLIO_TICKERS = [
-#     "RELIANCE.NS", "TCS.NS", "HDFCBANK.NS", "INFY.NS", "ICICIBANK.NS",
-#     "HINDUNILVR.NS", "ITC.NS", "KOTAKBANK.NS", "SBIN.NS", "BHARTIARTL.NS"
-# ]
-
-# ==================== DATE RANGE ====================
 
 # Historical data range
 START_DATE = "2023-01-01"
@@ -35,13 +24,6 @@ END_DATE = datetime.now().strftime("%Y-%m-%d")
 
 # For forecasting
 FORECAST_PERIODS = 1  # Days ahead to forecast
-
-# ==================== OPTIMIZATION PARAMETERS ====================
-
-# Risk aversion parameter (lambda)
-# Higher values = more conservative (lower risk)
-# Lower values = more aggressive (higher returns)
-# Typical range: 1-5
 RISK_AVERSION = 3.0
 
 # Minimum allocation per asset (to avoid too small positions)
@@ -55,7 +37,6 @@ MAXIMUM_ALLOCATION = 0.30
 # Allow short positions? (For Indian retail, typically False)
 ALLOW_SHORT = False
 
-# ==================== PROPHET MODEL PARAMETERS ====================
 
 # Prophet model settings
 PROPHET_PARAMS = {
@@ -65,8 +46,6 @@ PROPHET_PARAMS = {
     'changepoint_prior_scale': 0.05,  # Flexibility of trend changes
     'seasonality_prior_scale': 10,     # Strength of seasonality
 }
-
-# ==================== INDIAN MARKET HOLIDAYS 2024-2025 ====================
 
 # NSE Trading Holidays
 INDIAN_MARKET_HOLIDAYS = pd.DataFrame({
@@ -110,8 +89,6 @@ INDIAN_MARKET_HOLIDAYS = pd.DataFrame({
     'upper_window': 0,
 })
 
-# ==================== MARKET SETTINGS ====================
-
 # Market timezone
 MARKET_TIMEZONE = "Asia/Kolkata"
 
@@ -122,10 +99,6 @@ CURRENCY_CODE = "INR"
 # Market hours (IST)
 MARKET_OPEN = "09:15"   # 9:15 AM
 MARKET_CLOSE = "15:30"  # 3:30 PM
-
-# ==================== DATABASE CONFIGURATION ====================
-
-# Supabase configuration (set these as environment variables)
 import os
 
 SUPABASE_URL = os.getenv("SUPABASE_URL", "")
@@ -134,22 +107,12 @@ SUPABASE_KEY = os.getenv("SUPABASE_KEY", "")
 # Table name for storing results
 RESULTS_TABLE = "portfolio_predictions"
 
-# ==================== LOGGING ====================
-
 LOG_LEVEL = "INFO"
 LOG_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 
-# ==================== VALIDATION ====================
-
-# Add to the end of src/settings.py, before validate_settings()
-
-# ==================== ADDITIONAL CONSTANTS ====================
-
 # Supabase table name
-SUPABASE_TABLE_NAME = RESULTS_TABLE  # Alias for compatibility
-
-# Holiday name mapping (for compatibility with tests)
-HOLIDAY_NAME_MAP = {}  # Not needed for Indian holidays, but keep for compatibility
+SUPABASE_TABLE_NAME = RESULTS_TABLE  
+HOLIDAY_NAME_MAP = {} 
 
 def validate_settings():
     """Validate configuration settings"""
@@ -181,6 +144,4 @@ def validate_settings():
         raise ValueError(f"Configuration errors:\n" + "\n".join(f"- {e}" for e in errors))
     
     return True
-
-# Validate on import
 validate_settings()

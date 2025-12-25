@@ -1,0 +1,39 @@
+name: Wake Streamlit App
+
+on:
+  schedule:
+    # Run every day at 9:00 AM UTC (2:30 PM IST) - before market optimization
+    - cron: '0 9 * * *'
+  workflow_dispatch:
+
+jobs:
+  wake-app:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Wake up Streamlit app
+        run: |
+          echo "🔔 Waking up Streamlit app..."
+          
+          # Send HTTP request to wake up the app
+          response=$(curl -s -o /dev/null -w "%{http_code}" \
+            https://dhan-optimizer-z2x2wydkaappmrr7eampdnr.streamlit.app)
+          
+          echo "Response code: $response"
+          
+          if [ "$response" = "200" ] || [ "$response" = "302" ]; then
+            echo "✅ Streamlit app is awake and responding"
+          else
+            echo "⚠️ App returned code $response (might be waking up)"
+          fi
+          
+          # Wait a bit for app to fully wake
+          echo "Waiting 10 seconds for app to fully load..."
+          sleep 10
+          
+          # Try again
+          response=$(curl -s -o /dev/null -w "%{http_code}" \
+            https://dhan-optimizer-z2x2wydkaappmrr7eampdnr.streamlit.app)
+          
+          echo "Second check - Response code: $response"
+          echo "✅ Wake-up complete"

@@ -9,7 +9,7 @@ from src.settings import MAXIMUM_ALLOCATION, MINIMUM_ALLOCATION, RISK_AVERSION
 
 def calculate_mean_variance(
     data_dict: dict[str, pd.DataFrame],
-    lookback_days: int = 252,  # ~1 year of trading days
+    lookback_days: int = 252,  
 ) -> tuple[pd.Series, pd.DataFrame]:
     """
     Calculate mean returns and covariance matrix from Returns columns.

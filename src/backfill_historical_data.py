@@ -13,7 +13,6 @@ from src.main import run_optimisation
 from src.database import save_results_to_supabase
 from src.settings import PORTFOLIO_TICKERS
 
-# Set up logging
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s"
@@ -38,7 +37,7 @@ def backfill_historical_predictions(days_back: int = 10):
     current_date = end_date
     while len(dates_to_process) < days_back:
         # Only include weekdays (Monday=0 to Friday=4)
-        if current_date.weekday() < 5:  # Skip weekends
+        if current_date.weekday() < 5:
             dates_to_process.append(current_date)
         current_date -= timedelta(days=1)
     
@@ -58,10 +57,7 @@ def backfill_historical_predictions(days_back: int = 10):
         logger.info(f"{'='*70}")
         
         try:
-            # Calculate start date for historical data (2 years back from target date)
             start_date = (target_date - timedelta(days=730)).strftime("%Y-%m-%d")
-            
-            # Run optimization as if we were on that date
             result = run_optimisation(
                 tickers=PORTFOLIO_TICKERS,
                 start_date=start_date,
@@ -72,8 +68,6 @@ def backfill_historical_predictions(days_back: int = 10):
                 logger.warning(f"No result for {date_str} - likely no market data available")
                 failed_runs += 1
                 continue
-            
-            # Override the date to match our target date
             result["date"] = target_date.date()
             
             # Save to Supabase
@@ -90,7 +84,6 @@ def backfill_historical_predictions(days_back: int = 10):
             failed_runs += 1
             continue
     
-    # Summary
     logger.info(f"\n{'='*70}")
     logger.info("BACKFILL SUMMARY")
     logger.info(f"{'='*70}")
@@ -120,8 +113,7 @@ def main():
     )
     
     args = parser.parse_args()
-    
-    # Confirm with user
+
     print(f"\n{'='*70}")
     print("BACKFILL HISTORICAL PREDICTIONS")
     print(f"{'='*70}")

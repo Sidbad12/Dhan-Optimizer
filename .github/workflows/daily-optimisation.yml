@@ -1,10 +1,10 @@
-name: Daily Portfolio Optimisation
+name: Daily Portfolio Optimisation (Enhanced)
 
 on:
   schedule:
     # Run at 10:30 UTC = 4:00 PM IST (after Indian market close at 3:30 PM)
     - cron: '30 10 * * 1-5'  # Monday to Friday only
-  workflow_dispatch:  # Allows manual triggering
+  workflow_dispatch:
 
 jobs:
   optimise:
@@ -13,6 +13,43 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Check if Supabase is active
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: |
+          echo "🔍 Checking Supabase status..."
+          
+          # Install supabase client
+          pip install supabase
+          
+          # Test connection
+          python - <<EOF
+          import os
+          from supabase import create_client
+          
+          try:
+              client = create_client(
+                  os.environ["SUPABASE_URL"],
+                  os.environ["SUPABASE_KEY"]
+              )
+              result = client.table("portfolio_predictions").select("id").limit(1).execute()
+              print("✅ Supabase is active and responding")
+          except Exception as e:
+              print(f"❌ Supabase error: {e}")
+              print("")
+              print("🔧 Possible fixes:")
+              print("1. Go to Supabase dashboard and unpause the project")
+              print("2. Upgrade to paid plan for always-on database")
+              print("3. Set up keep-alive workflow")
+              exit(1)
+          EOF
+
+      - name: Wake Streamlit app
+        run: |
+          echo "🔔 Waking up Streamlit app..."
+          curl -I https://dhan-optimizer-z2x2wydkaappmrr7eampdnr.streamlit.app || true
 
       - name: Set up Python 3.12
         uses: actions/setup-python@v5
@@ -37,8 +74,29 @@ jobs:
       - name: Install dependencies
         run: poetry install --no-interaction
 
-      - name: Run portfolio optimisation and save to Supabase
+      - name: Run portfolio optimisation
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-        run: poetry run python -m src.main
+        run: |
+          echo "📊 Starting portfolio optimization..."
+          poetry run python -m src.main
+          
+          if [ $? -eq 0 ]; then
+            echo "✅ Optimization completed successfully"
+          else
+            echo "❌ Optimization failed"
+            exit 1
+          fi
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "❌ Workflow failed!"
+          echo ""
+          echo "Common issues:"
+          echo "1. Supabase project paused (check dashboard)"
+          echo "2. Network/API issues"
+          echo "3. Invalid predictions/data"
+          echo ""
+          echo "Check the logs above for specific error messages."
